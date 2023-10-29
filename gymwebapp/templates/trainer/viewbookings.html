@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if session['role'] == 'trainer' %}
+                {% set trainerid = user[0] %}
+                {% set username = "@{}".format(user[1]) %}
+
+                {% set hasbookings = namespace(bookings = 0) %}
+
+                
+<div>
+    <body>
+        <h2 class = "formheading">{{"All Personal Training Booking Records"}}</h2> 
+
+        <!-- Loop to only print out trainerID which matches to the logged in user & to the booking in SQL-->
+        
+        {% for booking in ptBookings %}
+            {% if booking[5] == trainerid %}
+            <div class="container">
+            <table class = "tableContainer">
+                    <thead>
+                        <tr>
+                            <th> Booking ID </th>
+                            <th> Session Date </th>
+                            <th> Time </th>
+                            <th> Location </th>
+                            <th> Message </th>
+
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr>
+                            <td>{{booking[4]}}</td>
+                            <td>{{booking[10] | nz_date()}}</td>
+                            <td>{{booking[11] | time()}}</td>
+                            <td>{{booking[12]}}</td>
+                            <td>{{booking[6]}}</td>
+                        </tr>
+                    </tbody>
+
+                    <thead>
+                        <tr>
+                            <th> Trainee's Name </th>
+                            <th> Date of birth </th>
+                            <th> Contact Phone Number </th>
+                            <th> Health History </th>
+                            <th> Fitness Goals </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>{{booking[0] + " " + booking[1]}}</td>
+                            <td>{{booking[7] | nz_date()}}</td> 
+                            <td>{{booking[2]}}</td>
+                            <td>{{booking[8]}}</td>
+                            <td>{{booking[9]}}</td>
+                        </tr>
+                    </tbody>
+                    
+                    <tfoot>
+                        <tr></tr>
+                    </tfoot>
+
+                        {% endif %}
+                {%endfor%}
+
+                    
+                {% set hasbookings.bookings = 1 %}
+                    <!-- Prints this message which says no bookings if there is none booked-->
+                        {%if hasbookings.bookings == 0 %}
+                            {{"No upcoming personal training sessions"}}
+                        {%endif%}
+
+
+                    </div>
+      
+
+        </table>
+    </body>
+</div>
+
+
+
+{%endif%}
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% set id = trainer[0] %}
+{% set username = "@{}".format(trainer[1]) %}
+{% set email = trainer[2] %}
+{% set full_name = "{} {}".format(trainer[3], trainer[4]) %}
+{% set dob = trainer[5] %}
+{% set gender = trainer[6] %}
+{% set address = "{} {}, {}, {} {}".format(trainer[7], trainer[8], trainer[9], trainer[10], trainer[11]) %}
+{% set phone = trainer[12] %}
+
+{% set qualification = trainer[13] %}
+{% set biography = trainer[14] %}
+{% set speciality = trainer[15] %}
+
+
+<h1 class = 'profileheading'>{{full_name}}</h1>
+<h4 class = 'profileheading'>{{gender}}</h4>
+
+
+
+
+<div class='profile-heading'>
+
+    <div class = 'profileheading'><img src="{{url_for('static', filename='trainer_photo/{}.jpg'.format(id))}}" alt="photo of a trainer" id="trainer photo"></div>
+    <div class="profileheading">
+
+    <a class=' btn btn-primary' href="{{ url_for('all_users_bp.showTrainersSchedules', trainer_id=id) }}">View or Book Trainer Schedule</a>
+</div>
+
+    <h2>Basic Details</h2>
+    <table class="table">
+        
+        <tr>
+            <td>E-mail</td>
+            <td>{{email}}</td>
+        </tr>
+        <tr>    
+            <td>Date of Birth</td>
+            <td>{{dob|nz_date}}</td>
+
+        </tr>    
+        <tr>    
+            <td>Phone</td>
+            <td>{{phone}}</td>
+
+        </tr>  
+
+    </table>
+
+    <h2>Introduction</h2>
+
+    <table class="table">
+        
+        <tr>
+            <td>Qualifications</td>
+            <td>{{qualification}}</td>
+        </tr>
+        <tr>    
+            <td>Speciality</td>
+            <td>{{speciality}}</td>
+
+        </tr>    
+        <tr>    
+            <td>Biography</td>
+            <td>{{ biography }}</td>
+
+        </tr>  
+    </table>
+
+
+
+
+
+
+{% endblock %}

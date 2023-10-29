@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+<!-- Form for updating own profile details
+ Currently sitting on its own page "updateprofile"-->
+
+<div class ="updateprofileform container-fluid" >
+    <form action = "/edit/profile" method="POST">
+        <fieldset>
+            <legend>Use this form to update your details</legend>
+            <label for="trainer_id"> </label>
+            <input type="hidden" name="trainer_id" id="trainer_id" value="{{updateUser[0]}}">
+
+            <label for="fieldtoupdate">Select value to update </label>
+            <select name="fieldtoupdate" id="fieldtoupdate" required>
+                <option value="first_name">First name</option>
+                <option value="last_name">Last name</option>
+                <option value="date_of_birth">YYYY-MM-DD</option>
+                <option value="gender">Gender</option>
+                <option value="house_number_name">House number</option>
+                <option value="street">Street name</option>
+                <option value="town">Suburb</option>
+                <option value="city">City</option>
+                <option value="post_code">Postal code</option>
+                <option value="phone">Phone number</option>
+                <option value="qualifications">Qualifications</option>
+                <option value="biography">Biography</option>
+                <option value="specialty">Specialty</option>
+
+            </select>
+
+                <label for="updatedvalue"> </label>
+                    <input type ="text" id="updatedvalue" name = "updatedvalue" placeholder="Type in updated value" required>
+
+
+                    <input type="submit" value="Submit edit">
+                    <input type="reset" value="Reset form">
+
+        </fieldset>
+    </form>
+
+
+
+</div>
+
+{% endblock %}

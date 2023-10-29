@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- {{schedules}} -->
+
+<div class = container>
+    <table class=" table table-hover table-light center">
+
+    <!--Set variables for logged in member-->
+    {% if session['role'] == 'member' %}
+    {% set memberid = user[0] %}
+
+    <!--Loop to print out relevant details for the logged in member-->
+
+        <h3 class = "formheading">{{"Your upcoming personal training sessions"}}</h3>
+            <thead>
+                <th scope="col">Trainer</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Location</th>
+            </thead>
+
+            <tbody>
+
+                {% for booking in currentBookings %}
+                    {% if booking[2] == memberid %}
+                    {% set trainer_id = booking[3] %}
+
+                    <tr>
+                    <td scope="row"><a href="{{ url_for('member_bp.viewTrainers', trainer_id=trainer_id) }}">{{ booking[4] + " " + booking[5] }}</a></td>
+                    <td>{{booking[7]}}</td> <td>{{booking[8]}}</td><td>{{booking[9]}}</td></tr>
+                    {% endif %}
+                    {%endfor%}
+                {% endif %}
+            </tbody>
+    </table>
+</div>
+
+
+<!-- form for booking new pt-->
+<div class = "ptFormContainer">
+    <h3 class="formheading">{{"Book a new personal training session"}}</h3>
+
+    <form action ="/member/bookpt" method ="POST">
+        
+        
+
+                <label for="member"></label>
+                {% for booking in currentBookings %}
+                    {% if booking[2] == memberid %}
+                <input type="hidden" name="member" id="member" value ="{{booking[2]}}">
+                {% endif %}
+                {%endfor%}
+
+
+                
+                    <label for="trainer">Select a trainer: </label>
+                        <select name="trainer" id="trainer" required>
+                        <option value="default">---</option>
+                            {% for trainer in trainers %}
+                                    <option value="{{trainer[0]}}">{{trainer[3] + " " + trainer[4]}}</option>
+                                    {%endfor%}
+                        
+                        </select>
+                    
+                
+                <div class ="formInput"id="formInput">
+                    <label for="duration">Duration: </label>
+                        <select name="duration" id="duration" required>
+                            <option value ='1'selected>1 hour</option>
+                        </select>
+                </div>
+                <div class ="formInput"id="formInput">
+                    <label for="date">Date: </label>
+                    <input type="date" id=date name="date" required >
+                </div>
+                
+                <div class ="formInput"id="formInput">
+                    <label for="time">Time: </label>
+                        <select name="time" id="time">
+                            <option value="6:00:00">6:00 AM</option>
+                            <option value="7:00:00">7:00 AM</option>
+                            <option value="8:00:00">8:00 AM</option>
+                            <option value="9:00:00">9:00 AM</option>
+                            <option value="10:00:00">10:00 AM</option>
+                            <option value="11:00:00">11:00 AM</option>
+                            <option value="12:00:00">12:00 PM</option>
+                            <option value="13:00:00">1:00 PM</option>
+                            <option value="14:00:00">2:00 PM</option>
+                            <option value="15:00:00">3:00 PM</option>
+                            <option value="16:00:00">4:00 PM</option>
+                            <option value="17:00:00">5:00 PM</option>
+                            <option value="18:00:00">6:00 PM</option>
+                            <option value="19:00:00">7:00 PM</option>
+                            <option value="20:00:00">8:00 PM</option>
+                        </select>
+                    </div>
+
+
+                    <div class ="formInput"id="formInput">
+                    <label>{{ "Choose location of session: "}}</label>
+                        <input type="radio" id="location" name="location" value="studio1">
+                        <label for="location">Studio 1</label> 
+
+                        <input type="radio" id="location" name="location" value="studio2">
+                        <label for="location">Studio 2</label>
+
+                        <input type="radio" id="location" name="location" value="studio3">
+                        <label for="location">Studio 3</label>
+                    </div>
+                
+    
+
+
+                    <div class ="formInput"id="formInput">
+                    <input type="submit" value="Book session" id="ptSubmitButton"> 
+                    <input type="reset" value="Reset selection" id="ptResetButton">
+                     
+                    {% if doubleBooked %}
+                    <span style="color: red;"> Trainer is already booked at this time </span>                    
+                    {% elif trainerUnavailable %}
+                    <span style="color: red;"> Trainer is unavailable at this time </span>
+                    {% elif wasFormSubmitted %}
+                        <span style="color: red;"> Booking confirmed</span>
+                        {% endif %}
+                    </div>
+           
+                
+            
+                
+                
+
+        
+            
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

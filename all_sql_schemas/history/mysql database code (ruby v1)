@@ -1,0 +1,136 @@
+DROP SCHEMA IF EXISTS gym;
+CREATE SCHEMA gym;
+USE gym;
+
+
+CREATE TABLE `users` (
+  `userid` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `role` int,
+  PRIMARY KEY (`userid`)
+  );
+
+CREATE TABLE `members` (
+  `memberid` int NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(45) NOT NULL,
+  `familyname` varchar(45) NOT NULL,
+  `dateofbirth` date DEFAULT NULL,
+  `phone` int DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `postalcode` varchar(4) DEFAULT NULL,
+  `userid` int NOT NULL,
+  PRIMARY KEY (`memberid`),
+  CONSTRAINT `userid` FOREIGN KEY (`userid`) REFERENCES `users`(`userid`)
+);
+
+CREATE TABLE `trainers` (
+  `trainerid` int NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(45) NOT NULL,
+  `familyname` varchar(45) NOT NULL,
+  `dateofbirth` date DEFAULT NULL,
+  `phone` int DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `biography` longtext,
+  `userid` int NOT NULL,
+ PRIMARY KEY (`trainerid`),
+ CONSTRAINT `traineruserid` FOREIGN KEY (`userid`) REFERENCES `users`(`userid`)
+);
+
+
+
+
+#not sure about the following constraints in the tables below, or if they are needed, need to check this
+
+CREATE TABLE `attendance` (
+  `attendanceid` int NOT NULL AUTO_INCREMENT,
+  `memberid` int NOT NULL,
+  `dateofsession` date DEFAULT NULL,
+  `PTattendance` tinyint DEFAULT NULL,
+  `classattendance` tinyint DEFAULT NULL,
+  `gymattendance` tinyint DEFAULT 1,
+  PRIMARY KEY (`attendanceid`),
+  CONSTRAINT `memberid` FOREIGN KEY (`memberid`) REFERENCES `members` (`memberid`) 
+);
+
+CREATE TABLE `groupfitnessclass` (
+  `classid` int NOT NULL,
+  `classname` varchar(45) NOT NULL,
+  `classtime` time NOT NULL,
+  `trainerid` int NOT NULL,
+  `classdescription` longtext,
+  PRIMARY KEY (`classid`),
+  CONSTRAINT `classtrainer` FOREIGN KEY (`trainerid`) REFERENCES `trainers`(`trainerid`)
+  );
+
+  
+  CREATE TABLE `personaltraining` (
+  `PTsessionID` int NOT NULL AUTO_INCREMENT,
+  `trainerid` int NOT NULL,
+  PRIMARY KEY (`PTsessionID`),
+  CONSTRAINT `trainerid` FOREIGN KEY (`trainerid`) REFERENCES `trainers`(`trainerid`)
+  );
+
+CREATE TABLE `groupfitnessbookings` (
+  `GFbookingreference` int NOT NULL AUTO_INCREMENT,
+  `memberid` int NOT NULL,
+  `bookingdate` date NOT NULL,
+  `classid` int NOT NULL,
+  PRIMARY KEY (`GFbookingreference`),
+  CONSTRAINT `memberbooking` FOREIGN KEY (`memberid`) REFERENCES `members`(`memberid`),
+  CONSTRAINT `classbooking` FOREIGN KEY (`classid`) REFERENCES `groupfitnessclass`(`classid`)
+  );
+
+ CREATE TABLE `personaltrainingbooking` (
+  `PTbookingreference` int NOT NULL AUTO_INCREMENT,
+  `PTsessionID` int NOT NULL,
+  `memberid` int NOT NULL,
+  `dateofsession` date NOT NULL,
+  PRIMARY KEY (`PTbookingreference`),
+  CONSTRAINT `PTsessionID` FOREIGN KEY (`PTsessionID`) REFERENCES `personaltraining` (`PTsessionID`),
+  CONSTRAINT `PTmember` FOREIGN KEY (`memberid`) REFERENCES `members`(`memberid`)
+  );
+
+
+  #maybe need to change the payment schedule column to months somehow
+  CREATE TABLE `subscriptions` (
+  `subscriptionplanid` int NOT NULL AUTO_INCREMENT,
+  `paymentschedule` int NOT NULL, 
+  `amountdue` int NOT NULL,
+  PRIMARY KEY (`subscriptionplanid`)
+);
+
+#`nextpayment` date DEFAULT (now() + INTERVAL 1 MONTH), 
+  CREATE TABLE `paymentreferences` (
+  `paymentreference` int NOT NULL AUTO_INCREMENT,
+  `PTbookingreference` int, 
+  `subscriptionplanid` int,
+  PRIMARY KEY (`paymentreference`), 
+  FOREIGN KEY (`PTbookingreference`) REFERENCES `personaltrainingbooking`(`PTbookingreference`),
+  FOREIGN KEY (`subscriptionplanid`) REFERENCES `subscriptions` (`subscriptionplanid`)
+  
+);
+  
+  CREATE TABLE `payments` (
+  `payments` int NOT NULL AUTO_INCREMENT,
+  `paymentreference` int,
+  `dateofpayment` date NOT NULL,
+  `paid` tinyint DEFAULT 1,
+  PRIMARY KEY (`payments`),
+  FOREIGN KEY (`paymentreference`) REFERENCES `paymentreferences`(`paymentreference`)
+  );
+  
+  CREATE TABLE `qualifications` (
+  `qualification` int NOT NULL AUTO_INCREMENT,
+  `trainerid` int NOT NULL,
+  PRIMARY KEY (`qualification`),
+  FOREIGN KEY (`trainerid`) REFERENCES `trainers`(`trainerid`)
+  );
+
+ CREATE TABLE `notifications` (
+  `notificationid` int NOT NULL AUTO_INCREMENT,
+  `userid` int,
+  `message` longtext,
+  PRIMARY KEY (`notificationid`),
+  FOREIGN KEY (`userid`) REFERENCES `users`(`userid`)
+  );

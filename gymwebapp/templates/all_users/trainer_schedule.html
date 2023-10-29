@@ -1,0 +1,313 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+
+<script>
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var Calendar = FullCalendar.Calendar;
+    var Draggable = FullCalendar.Draggable;
+
+    var containerEl = document.getElementById('external-events');
+    var calendarEl = document.getElementById('calendar');
+    var checkbox = document.getElementById('drop-remove');
+
+    // initialize the external events
+    // -----------------------------------------------------------------
+
+    new Draggable(containerEl, {
+      itemSelector: '.fc-event',
+      eventData: function(eventEl) {
+        return {
+          title: eventEl.innerText
+        };
+      }
+    });
+
+    // initialize the calendar
+    // -----------------------------------------------------------------
+
+    var calendar = new Calendar(calendarEl, {
+      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+
+    //   dayRender: function(date, cell){
+    //     if (date < '2023-03-20'){
+    //         $(cell).addClass('disabled');
+    //         $(cell).css("background-color", "red")
+    //     }
+    // },
+    titleFormat: 'dddd, D MMMM YYYY',
+      allDaySlot: false,
+      initialView: 'resourceTimeGrid3days',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'resourceTimeGrid,resourceTimeGrid3days,resourceTimeGrid5days'
+      },
+      validRange: {
+    start: "{{start_date }}",
+    end: "{{end_date }}"
+  },
+
+      slotMinTime: "06:00:00",
+        slotMaxTime: "20:00:00",
+
+        businessHours: {
+        // days of week. an array of zero-based day of week integers
+        daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6 ], // Monday - Sunday
+        startTime: '06:00:00', 
+        endTime: '20:00:00', 
+        },
+        
+      eventConstraint : 'businessHours',
+      droppable: true, // this allows things to be dropped onto the calendar
+      resources: [{ id: 'a', title: 'Studio 1' },
+                  { id: 'b', title: 'Studio 2' },
+                  { id: 'c', title: 'Studio 3' }],
+                  
+      events:{{ timetable | safe }},
+      views: {
+
+          resourceTimeGrid: {
+          type: 'resourceTimeGrid',
+          duration: { days: 1 },
+          buttonText: '1-day'
+          },
+        
+          resourceTimeGrid3days: {
+          type: 'resourceTimeGrid',
+          duration: { days: 3 },
+          buttonText: '3-day'
+          },
+          resourceTimeGrid5days: {
+          type: 'resourceTimeGrid',
+          duration: { days: 5 },
+          buttonText: '5-day'
+          },
+          defaultView: 'resourceTimeGrid3days'},
+      datesAboveResources:true,
+      
+      eventOverlap: false,
+      eventReceive: function(info) {
+          alert(info.event.title + " was dropped on " + info.event.start.toISOString());
+        if(info.event.start.getHours < 6){
+          alert("Everyone is still sleeping!")
+          info.revert();
+        }
+    else if (!confirm("Are you sure to book this personal session with {{name}}?")) {
+      info.revert();
+      console.log(info)
+    } else{
+
+      info.event.setProp( 'title', 'Booked!' )
+
+      date = info.event.start
+
+      var locations = ['a','b','c'];
+
+
+    for (let i = 0; i < locations.length; i++) {
+      if (locations[i] != info.event.getResources()){
+      calendar.addEvent({
+              start: date,
+              end: moment(date).add(1, "h").format("YYYY-MM-DDTHH:mm:ss"),
+              resourceId: locations[i],
+              
+              display: 'background',
+              backgroundColor:'#808080'
+        })
+      }
+    }
+
+      
+
+
+      console.log(info.event);
+      console.log(info.event.getResources());
+      console.log(info.event.start);
+      console.log(info.event.end);
+      $.ajax({
+        type: "POST",
+        url: "/bookpt",
+        data: JSON.stringify({trainer_id:{{trainer_id}},start:info.event.start.toLocaleString("en-NZ"), location: info.event.getResources()[0]['id']}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(result) {
+          console.log("Result:");
+          console.log(result);
+          
+          } 
+        });
+
+      
+    }
+  }
+          
+});
+
+    calendar.render();
+  });
+
+
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var Calendar = FullCalendar.Calendar;
+    var calendarEl = document.getElementById('calendar-non-member');
+
+    // initialize the calendar
+    // -----------------------------------------------------------------
+
+    var calendar = new Calendar(calendarEl, {
+      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+
+    //   dayRender: function(date, cell){
+    //     if (date < '2023-03-20'){
+    //         $(cell).addClass('disabled');
+    //         $(cell).css("background-color", "red")
+    //     }
+    // },
+      allDaySlot: false,
+      initialView: 'resourceTimeGrid3days',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'resourceTimeGrid,resourceTimeGrid3days,resourceTimeGrid5days'
+      },
+      validRange: {
+    start: "{{start_date }}",
+    end: "{{end_date }}"
+  },
+
+      slotMinTime: "06:00:00",
+        slotMaxTime: "20:00:00",
+
+        businessHours: {
+        // days of week. an array of zero-based day of week integers
+        daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6 ], // Monday - Sunday
+        startTime: '06:00:00', 
+        endTime: '20:00:00', 
+        },
+        
+      eventConstraint : 'businessHours',
+      droppable: true, // this allows things to be dropped onto the calendar
+      resources: [{ id: 'a', title: 'Studio 1' },
+                  { id: 'b', title: 'Studio 2' },
+                  { id: 'c', title: 'Studio 3' }],
+                  
+      events:{{ timetable | safe }},
+      views: {
+
+          resourceTimeGrid: {
+          type: 'resourceTimeGrid',
+          duration: { days: 1 },
+          buttonText: '1-day'
+          },
+        
+          resourceTimeGrid3days: {
+          type: 'resourceTimeGrid',
+          duration: { days: 3 },
+          buttonText: '3-day'
+          },
+          resourceTimeGrid5days: {
+          type: 'resourceTimeGrid',
+          duration: { days: 5 },
+          buttonText: '5-day'
+          },
+          defaultView: 'resourceTimeGrid3days'},
+      datesAboveResources:true,
+      
+      eventOverlap: false,
+      
+  
+          
+});
+
+    calendar.render();
+    
+  });
+
+
+  
+  
+
+    
+
+    
+
+  </script>
+
+  
+  <h3 class="center">Please select a trainer to view his/her time table (up to 14 days)</h3>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm"></div>
+<div class="col-sm">
+
+
+<select id="trainer" class="form-control me-2"  onchange ="if (this.value)window.location.href=this.value" required>
+  <option value="">Choose a trainer</option>
+  {% for each in trainer_list %}
+  <option  value='/trainer-schedule/{{each[0]}}'>{{each[1]}}</option>
+  {% endfor%}
+</select>
+  
+
+
+</div>
+<div class="col-sm"></div>
+<div class="col-sm" style="z-index: 3;">
+
+  {%if name and session["role"] == 'member'%}
+  <div id='external-events'>
+    <p>
+      <strong>Place this BOX anywhere on the Calendar to Book!</strong>
+    </p>
+
+
+    <div></div>
+
+    
+    <div class='fc-event '>
+      <div id='draggable-el' class="rounded" data-event='{ "title": "Personal Training", "duration": "01:00" }'>Drag Me to Book! </div>
+    </div>
+    
+
+  
+    
+  </div>
+  {%endif%}
+
+
+</div>
+
+</div>
+</div>
+
+
+
+{%if name and session["role"] == 'member'%}
+<h2 class='center'>You are viewing the time table of {{name}}</h2>
+
+
+  <div class="outer" id='calendar-container'>
+    <div id='calendar'></div>
+  </div>
+
+  
+  {%endif%}
+
+  {%if name and session["role"] != 'member'%}
+  <h2 class='center'>You are viewing the time table of {{name}}</h2>
+
+
+  <div id='calendar-container'>
+    <div id='calendar-non-member'></div>
+  </div>
+
+  {%endif%}
+{% endblock %}

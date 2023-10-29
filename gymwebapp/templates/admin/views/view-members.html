@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div>
+
+    <a class='btn btn-primary' href="{{ url_for('admin_bp.addNewMember', form=form) }}">Add New Member</a>
+    <form method="POST" action="{{ url_for('admin_bp.view_members')}}" class="d-flex">
+
+
+        <input class="form-control me-2" type="search" name="searchmembers" id="search-input" placeholder="Search members!" required>
+
+      <input type="submit" id="submit-btn" placeholder="Search!" class="btn btn-outline-secondary" >
+    
+    </form>
+</div>
+
+
+<div class='profile-heading'></div>
+<div class="col"></div>
+<div class="col">
+    
+    <table class=" table table-hover table-striped center">
+    <thead>
+        <tr>
+            <th scope="col">ID number</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">user name</th>
+            <th scope="col">e-mail</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Details</th>
+        </tr>
+
+
+    </thead>
+    <tbody>
+        
+
+    {% for member in members %}
+    
+
+    
+        
+        <tr>
+            {% set id = member[0] %}
+            
+            {% for entry in member %}
+                <td scope="row">{{entry}}</td>
+            {% endfor %}
+
+
+            
+
+            <td>  <a href="{{ url_for('admin_bp.view_memberprofile', username=member[2]) }}"> View Details </a></td>
+        </tr>
+    
+    {% endfor %}
+
+    </tbody>
+</table>
+
+</div>
+<div class="col"></div>
+
+        
+
+
+    
+        
+
+
+{% endblock %}

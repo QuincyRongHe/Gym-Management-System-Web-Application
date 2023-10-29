@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script>
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+        allDaySlot: false,
+        initialView: 'timeGridWeek',
+
+
+    // because the plugin is present, you can now use formatting strings.
+    // will produce something like "Tuesday, September 18, 2018"
+    titleFormat: 'dddd, D MMMM YYYY',
+        slotMinTime: "06:00:00",
+        slotMaxTime: "20:00:00",
+        views: {
+        resourceTimeGrid3days: {
+            type: 'resourceTimeGrid',
+            duration: { days: 3 },
+            buttonText: '3-day'
+          },
+          defaultView: 'resourceTimeGrid3days'},
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listWeek,resourceTimeGrid3days'
+        },
+        datesAboveResources:true,
+        resources: [{ id: 'a', title: 'Studio 1' },
+                    { id: 'b', title: 'Studio 2' },
+                    { id: 'c', title: 'Studio 3' }],
+                    
+
+        events: {{events | safe}},
+        // eventContent: {html: '<i style="white-space: pre-line">some html\nsecond line</i>'},
+
+        eventMouseEnter: function(info) {
+
+          let modal = document.querySelector('.modal');
+          var mousePos = {};
+          var s = info.jsEvent
+
+
+          var rect = s.target.getBoundingClientRect(); // get some poition, scale,... properties of the item
+            mousePos.x = s.clientX; // get the mouse position relative to the element
+            mousePos.y = s.clientY;
+
+            var myVar = $(".modal")[1]
+
+            var descr = info.event.extendedProps.description
+
+
+
+
+            $("#msg").modal({backdrop: false})
+
+            $("#m").html(descr);
+            myVar.style.left = (mousePos.x+5) + "px"; // set the modal position to the last stored position
+            myVar.style.top = (mousePos.y+5) + "px";
+            myVar.focus();
+
+            // $("#msg").modal('show')
+          
+          },
+
+        eventMouseLeave: function(info) {
+
+
+          console.log('Hi...')
+
+          $("#msg").modal('hide')
+          
+          }
+
+        
+
+      });
+      calendar.render();
+      calendar.changeView('resourceTimeGrid3days', {
+                start: '06:00:00',
+                end: '20:00:00'
+                                      });
+      
+    });
+
+    
+  
+
+    
+
+    
+
+  </script>
+
+ 
+  
+<div class="outer">    
+    <div id="calendar">
+    </div>
+ </div>
+
+
+<!-- WARNING  TESTING AREA -->
+
+
+
+    <div class="modal trainer fade rounded" id="msg">
+      <p id="m">I am a description.</p>
+    </div>
+
+
+
+
+
+
+
+{% endblock %}

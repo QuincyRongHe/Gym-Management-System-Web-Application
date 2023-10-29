@@ -1,0 +1,63 @@
+
+.wrapper{
+    display:flex;
+    flex-direction:row;
+    }
+    #left{
+        width:50%;
+        position:relative;
+        float:left;
+        height:100%;
+    }
+    #right{
+    width:auto;
+    }
+
+#search {
+  width: 357px;
+  margin: 4px auto;
+  text-align: center;
+  display: inline-block;
+}
+
+
+#search-input {
+
+    height: 21px;
+    width: 250px;
+    margin: 10px auto;
+    font-size: 15px;
+    text-align: center;
+    padding-left: 5px;
+    vertical-align: bottom
+}
+
+#submit-btn {
+    border: solid 1px #CCC;
+    height: 25px;
+    width: 115px;
+    margin: 10px;
+}
+
+/* Clickable rows */
+
+.table inbox {
+    display: table;
+  }
+  
+  .row2 {
+    display: table-row;
+  }
+  
+  .cell {
+    display: table-cell;
+    padding: 10px;
+  }
+  
+  .row2:hover {
+    background-color: #cccccc;
+  }
+  
+  .cell:hover {
+    background-color: #e5e5e5;
+  }

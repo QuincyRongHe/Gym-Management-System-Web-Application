@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% set classID = classDetails[0]%}
+{% set title = classDetails[1]%}
+{% set trainerName = "{} {}".format(trainer[3], trainer[4])%}
+{% set descr = classDetails[4]%}
+{% set startDate = classDetails[5]%}
+{% set startTime = classDetails[6]%}
+{% set location = classDetails[7]%}
+{% set capacity = 30%}
+<div class="center">
+<h2> {{ title }} </h2>
+<h3> Trainer: {{ trainerName }}</h3>
+<h3> Duration: 1 hour</h3>
+<h3> Location: {{ location }}</h3>
+<h3>Capacity: {{capacity}}</h3>
+<h3> Description:</h3>
+<h4> {{ descr }}</h4>
+<br/>
+
+
+<h3> Date Time : {{ startDate }} {{ startTime }}</h3>
+<h3> Space Left : {{spaceLeft}}</h3>
+
+{% if session['role'] == 'member' and not booked and spaceLeft != 0 and startDate > today%}
+<a class='btn btn-primary' href= {{  url_for('member_bp.bookClass', id=classID)  }}> Book This Class for ME!</a>
+
+{%endif%}
+
+{%  if booked and startDate > today %}
+
+<h2> You have booked this class, we looking forward to seeing you! :></h2>
+
+{%endif%}
+
+{%  if booked and startDate < today %}
+
+<h2> Thank you to have participated with us, we really want ot see you again soon! :></h2>
+
+{%endif%}
+</div>
+
+{% endblock %}

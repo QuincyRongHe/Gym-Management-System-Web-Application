@@ -1,0 +1,169 @@
+
+<head>  
+  <title>Navigation</title> 
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>  
+
+
+<div class="nav-container">
+
+
+
+
+     
+    <nav class="nav">
+        <ul>
+
+
+
+          {% if request.url_rule.endpoint not in ['all_users_bp.home', 'all_users_bp.dashboard'] %}
+            <a href="#" onclick="GoBackWithRefresh();return false;" > <～ Go Back </a>
+          {% endif %}
+
+
+          
+            <a class="active" href="{{ url_for('all_users_bp.home') }}"><i class="fa fa-fw fa-home"></i></a> 
+            
+
+            
+
+            {% if session['username'] %}
+
+            <a href="{{ url_for('all_users_bp.myprofile') }}" > My Profile </a> </a>
+
+            <a href="{{ url_for('all_users_bp.view_classes_calendar') }}" > Group Classes</a>
+
+            <a href="{{ url_for('all_users_bp.showTrainersSchedules') }}" > Trainer Schedules </a> </a>
+            
+            
+            {% endif %} 
+            
+            {% if session['role'] == 'admin' %}
+            <a href="{{ url_for('admin_bp.view_members') }}" > Members </a> </a>
+
+            <a href="{{ url_for('admin_bp.view_reports') }}" > Reports </a> </a>
+            <a href="{{ url_for('admin_bp.show_myecharts') }}" > Attendance </a> </a>
+            
+
+            {% endif %} 
+
+            {% if session['role'] == 'member' %}
+            <a href="{{ url_for('member_bp.viewTrainers') }}" > Trainers </a> </a>
+            
+            
+
+            {% endif %} 
+
+
+            {% if session['role'] == 'trainer' %}
+            <a href="{{ url_for('trainer_bp.getViewBookings') }}" > Personal Training Bookings </a> </a>
+            
+
+            {% endif %} 
+
+
+            {% if session['username'] %}
+                <div align="center">  
+                     <a href="/logout" style=" border-radius: 0%;">Logout</a>  
+                </div>  
+            {% else %}  
+                <div align="center" style="text-align: right;">  
+                    <a data-target="#myModal" class="btn" style=" border-radius: 0%;" data-toggle="modal" href="#"> Log Me In <i class="fa fa-fw fa-user"></i></a>
+                </div>  
+            {% endif %} 
+           
+        </ul> 
+    </nav>
+</div>
+
+
+
+<div id="myModal" class="modal fade">  
+    <div class="modal-dialog">  
+ <!-- Modal content-->  
+         <div class="modal-content">  
+              <div class="modal-header">  
+                     
+                   <h4 class="modal-title" align="center">Welcome, Guest :)</h4>  
+              </div>  
+              <div class="modal-body">  
+                   <label >Username</label>  
+                   <input type="text" name="username" id="username" class="form-control" style="width: 100px;" />  
+                   <br />  
+                   <label>Your Role</label> 
+
+                   <div class="modal-body">
+                    <label class="radio-inline">
+                      <input type="radio" name="roleRadioOptions" id="inlineRadio1" value="member"> Member
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="roleRadioOptions" id="inlineRadio2" value="trainer"> Trainer
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="roleRadioOptions" id="inlineRadio3" value="admin"> Admin
+                    </label>
+                  </div>
+                   
+                   <button type="button" name="login_button" id="login_button" class="btn btn-warning">Login</button>  
+
+              </div>  
+         </div>  
+    </div>  
+</div> 
+
+
+
+
+
+<script>  
+
+function GoBackWithRefresh(event) {
+    if ('referrer' in document) {
+        window.location = document.referrer;
+        /* OR */
+     //    location.replace(document.referrer);
+    } else {
+        window.history.back();
+    }
+}
+
+
+    $(document).ready(function(){  
+         $('#login_button').click(function(){  
+              var username = $('#username').val();  
+              var roleoption = $("input[name='roleRadioOptions']:checked").val();
+
+              console.log(roleoption)
+
+              if(username != '' && roleoption != undefined)  
+              {  
+                   $.ajax({  
+                        url:"/login",  
+                        method:"POST",  
+                        data: {username:username, role:roleoption},  
+                        success:function(data)  
+                        {  
+                            console.log(data)
+                             alert(data);  
+                             if(data == 'No-data')  
+                             {  
+                                  alert("Invalid Email Or Password!");  
+                             }  
+                             else
+                             {  
+                                  $('#loginModal').hide();  
+                                  location.reload();  
+                             }  
+                        }  
+                   });  
+              }  
+              else
+              {  
+                   alert("Both Fields are required");  
+              }  
+         });    
+    });  
+   </script>   

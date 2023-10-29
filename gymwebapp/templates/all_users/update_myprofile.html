@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h1 class = 'profileheading'></h1>
+
+
+
+<!-- Loop to load in member profile-->
+{% if session['role'] == 'member' %}
+
+{% set id = user[0] %}
+{% set username = "@{}".format(user[1]) %}
+{% set email = user[2] %}
+{% set first_name = user[3] %}
+{% set last_name = user[4] %}
+{% set full_name = "{} {}".format(user[3], user[4]) %}
+{% set dob = user[5] %}
+{% set gender = user[6] %}
+{% set address = "{} {}, {}, {} {}".format(user[7], user[8], user[9], user[10], user[11]) %}
+{% set phone = user[12] %}
+{% set introduction = user[13] %}
+{% set emergent_person = user[14] %}
+{% set emergent_person_phone = user[15] %}
+{% set health_record = user[16] %}
+{% set weight = user[17] %}
+{% set height = user[18] %}
+
+{% set registered_date = user[19] %}
+<form id="update_form" action="{{ url_for('all_users_bp.saveUpdateMyprofile') }}" method="post"> 
+<div class='profile-heading'>
+
+
+    <div class="col"><img src= {{ url_for('static', filename='images/nova.jpg') }} alt="profle pic of a dog" id="userprofilepic"></div>
+    <div class="col">
+        <input type="text" class="form-control me-2" id="fname" name="fname"
+             value={{first_name}}>
+             <input type="text" class="form-control me-2" id="lname" name="lname"
+             value={{last_name}} >
+        
+        <h4>{{username}}</h4>
+        <h4>
+
+            {% if gender == 'female' %}
+
+            <select class="form-control me-2" name="gender" id="gender">
+                
+                <option value="female" selected>Female</option>
+                <option value="male" >Male</option>
+              </select>
+
+              {% else %}
+
+              <select class="form-control me-2" name="gender" id="gender">
+                
+                <option value="female">Female</option>
+                <option value="male" selected>Male</option>
+              </select>
+
+
+              {%endif%}
+            
+            </h4>
+        
+    </div>
+    <div class="col">
+
+        <br/>
+        <button  type='submit' class='btn btn-primary' name="submit" id="sumbit">Save Changes</button>
+    </div>
+
+    <h2>{{session['role'] | capitalize}}</h2>
+
+    {% if session['subStatus'] %}
+    <h2> Subscribtion Status: Active</h2>
+    {% else %}
+    <h2> Subscribtion Status: Inactive</h2>
+    {% endif %}
+    
+    <h2>Basic Details</h2>
+    <table class="table">
+        
+        <tr>
+            <td>E-mail</td>
+            <td><input type="text" class="form-control me-2" id="email" name="email" value={{email}}></td>
+        </tr>
+        <tr>    
+            <td>Date of Birth</td>
+            <td><input type="date" class="form-control me-2" id="dob" name="dob" value={{dob}} ></td>
+
+        </tr>    
+        <tr>    
+            <td>House Number/Name</td>
+            <td><input type="text" class="form-control me-2" id="house" name="house" value={{user[7]}} ></td>
+
+        </tr>  
+        <tr>    
+            <td>Street</td>
+            <td><input type="text" class="form-control me-2" id="street" name="street" value={{user[8]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>Town</td>
+            <td><input type="text" class="form-control me-2" id="town" name="town" value={{user[9]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>City</td>
+            <td><input type="text" class="form-control me-2" id="city" name="city" value={{user[10]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>Postal Code</td>
+            <td><input type="text" class="form-control me-2" id="postcode" name="postcode" value={{user[11]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>Phone</td>
+            <td><input type="text" class="form-control me-2" id="phone" name="phone" value={{phone}} ></td>
+
+        </tr>  
+
+    </table>
+
+    <h2 >Introduction</h2>
+
+    <div>   <textarea class="form-control me-2" id="introduction" name="introduction" >{{introduction}} </textarea></div>
+
+    
+    <h2>Fitness Information</h2>
+
+    <table class="table">
+        
+        <tr>
+            <td>Height</td>
+            <td><input type="number" class="form-control me-2" id="height" name="height" value={{height}} > cm</td>
+        </tr>
+        <tr>    
+            <td>Weight</td>
+            <td><input type="number" class="form-control me-2" id="weight" name="weight" value={{weight}} > kg</td>
+
+        </tr>    
+        <tr>    
+            <td>Health History</td>
+            <td><textarea class="form-control me-2" id="health_record" name="health_record" >{{health_record}} </textarea></td>
+
+        </tr>  
+    </table>
+
+    <h2>Emergency Information</h2>
+
+    <table class="table">
+        
+        <tr>
+            <td>Contact Person</td>
+            <td><input type="text" class="form-control me-2" id="emergent_person" name="emergent_person" value={{emergent_person}} ></td>
+        </tr>
+        <tr>    
+            <td>Phone Number</td>
+            <td><input type="text" class="form-control me-2" id="emergent_person_phone" name="emergent_person_phone" value={{emergent_person_phone}} ></td>
+
+        </tr>    
+    </table>
+
+    <table class="table">
+        
+        <tr>
+            <td>Date Registered</td>
+            <td>{{registered_date}}</td>
+        </tr>
+    </table>
+
+</div>
+</form>
+
+{% endif %}
+
+
+<!-- Loop to load in trainer profile-->
+{% if session['role'] == 'trainer' %}
+
+
+{% set id = user[0] %}
+{% set username = "@{}".format(user[1]) %}
+{% set email = user[2] %}
+{% set first_name = user[3] %}
+{% set last_name = user[4] %}
+{% set full_name = "{} {}".format(user[3], user[4]) %}
+{% set dob = user[5] %}
+{% set gender = user[6] %}
+{% set address = "{} {}, {}, {} {}".format(user[7], user[8], user[9], user[10], user[11]) %}
+{% set phone = user[12] %}
+
+{% set qualification = user[13] %}
+{% set biography = user[14] %}
+{% set speciality = user[15] %}
+
+<form id="update_form" action="{{ url_for('all_users_bp.saveUpdateMyprofile') }}" method="post"> 
+<div class='profile-heading'>
+
+    <div class="col"><img src= {{ url_for('static', filename='images/nova.jpg') }} alt="profle pic of a dog" id="userprofilepic"></div>
+    <div class="col">
+        <input type="text" class="form-control me-2" id="fname" name="fname"
+             value={{first_name}}>
+             <input type="text" class="form-control me-2" id="lname" name="lname"
+             value={{last_name}} >
+        
+        <h4>{{username}}</h4>
+        <h4>
+
+            {% if gender == 'female' %}
+
+            <select class="form-control me-2" name="gender" id="gender">
+                
+                <option value="female" selected>Female</option>
+                <option value="male" >Male</option>
+              </select>
+
+              {% else %}
+
+              <select class="form-control me-2" name="gender" id="gender">
+                
+                <option value="female">Female</option>
+                <option value="male" selected>Male</option>
+              </select>
+
+
+              {%endif%}
+            
+            </h4>
+        
+    </div>
+    <div class="col">
+ 
+        <br/>
+        <button  type='submit' class='btn btn-primary' name="submit" id="sumbit">Save Changes</button>
+    </div>
+
+    <h2>{{session['role'] | capitalize}}</h2>
+    
+    <h2>Basic Details</h2>
+    <table class="table">
+        
+        <tr>
+            <td>E-mail</td>
+            <td><input type="text" class="form-control me-2" id="email" name="email" value={{email}}></td>
+        </tr>
+        <tr>    
+            <td>Date of Birth</td>
+            <td><input type="date" class="form-control me-2" id="dob" name="dob" value={{dob}} ></td>
+
+        </tr>    
+        <tr>    
+            <td>House Number/Name</td>
+            <td><input type="text" class="form-control me-2" id="house" name="house" value={{user[7]}} ></td>
+
+        </tr>  
+        <tr>    
+            <td>Street</td>
+            <td><input type="text" class="form-control me-2" id="street" name="street" value={{user[8]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>Town</td>
+            <td><input type="text" class="form-control me-2" id="town" name="town" value={{user[9]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>City</td>
+            <td><input type="text" class="form-control me-2" id="city" name="city" value={{user[10]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>Postal Code</td>
+            <td><input type="text" class="form-control me-2" id="postcode" name="postcode" value={{user[11]}} ></td>
+
+        </tr> 
+        <tr>    
+            <td>Phone</td>
+            <td><input type="text" class="form-control me-2" id="phone" name="phone" value={{phone}} ></td>
+
+        </tr>   
+
+    </table>
+
+    <h2>Introduction</h2>
+
+    <table class="table">
+        
+        <tr>
+            <td>Qualifications</td>
+            <td><textarea class="form-control me-2" id="qualification" name="qualification" >{{qualification}} </textarea></td>
+        </tr>
+        <tr>    
+            <td>Speciality</td>
+            <td><textarea class="form-control me-2" id="speciality" name="speciality" >{{speciality}} </textarea></td>
+
+        </tr>    
+        <tr>    
+            <td>Biography</td>
+            <td><textarea class="form-control me-2" id="biography" name="biography" >{{biography}} </textarea></td>
+
+        </tr>  
+    </table>
+</form>
+
+{% endif %}
+
+
+
+<!-- Loop to load in admin profile-->
+{% if session['role'] == 'admin' %}
+
+
+
+{% set id = user[0] %}
+{% set username = "@{}".format(user[1]) %}
+{% set email = user[2] %}
+{% set first_name = user[3]  %}
+{% set last_name = user[4]   %}
+{% set full_name = "{} {}".format(user[3], user[4]) %}
+
+<form id="update_form" action="{{ url_for('all_users_bp.saveUpdateMyprofile') }}" method="post"> 
+<div class='profile-heading'>
+
+    <div class="col"><img src= {{ url_for('static', filename='images/nova.jpg') }} alt="profle pic of a dog" id="userprofilepic"></div>
+    <div class="col">
+        <input type="text" class="form-control me-2" id="fname" name="fname"
+             value={{first_name}}>
+             <input type="text" class="form-control me-2" id="lname" name="lname"
+             value={{last_name}} >
+        <h3>{{username}}</h3>
+        
+    </div>
+    <div class="col">
+
+        <br/>
+        <button  type='submit' class='btn btn-primary' name="submit" id="sumbit">Save Changes</button>
+    </div>
+
+    <h2>{{session['role'] | capitalize}}</h2>
+    
+    <h2>Basic Details</h2>
+    <table class="table">
+        
+        <tr>
+            <td>E-mail</td>
+            <td><input type="text" class="form-control me-2" id="email" name="email" value={{email}}></td>
+        </tr>
+        
+    </table>
+
+</form>
+
+
+    <script>
+
+        document.getElementById("update_form").addEventListener($("#update_form").data("changed"), enableLink(document.getElementById('submit')));
+
+        function disableLink(link) {
+            var handler = function(e) {
+                e.preventDefault();
+                console.log('click disabled');
+            }
+            link.addEventListener('click', handler, false);
+            link.dataset.disableHandler = handler;
+        }
+        function enableLink(link) {
+            if (link.dataset.disableHandler) {
+                link.removeEventListener('click', link.dataset.disableHandler);
+                link.dataset.disableHandler = null;
+            }
+        }
+
+        $("#update_form :input :textarea :select").change(function() {
+            $("#update_form").data("changed",true);
+        });
+
+    
+
+    </script>
+
+{% endif %}
+
+{% endblock %}

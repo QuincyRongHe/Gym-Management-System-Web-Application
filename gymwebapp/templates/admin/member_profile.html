@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content%}
+
+{% if member %}
+{% set id = member[0] %}
+{% set username = "@{}".format(member[1]) %}
+{% set email = member[2] %}
+{% set full_name = "{} {}".format(member[3], member[4]) %}
+{% set dob = member[5] %}
+{% set gender = member[6] %}
+{% set address = "{} {}, {}, {} {}".format(member[7], member[8], member[9], member[10], member[11]) %}
+{% set phone = member[12] %}
+{% set introduction = member[13] %}
+{% set emergent_person = member[14] %}
+{% set emergent_person_phone = member[15] %}
+{% set health_record = member[16] %}
+{% set weight = member[17] %}
+{% set height = member[18] %}
+
+{% set registered_date = member[19] %}
+
+<div class='profile-heading'>
+
+    
+    <div class="col"><img src="{{ url_for('static', filename='images/nova.jpg')  }}" alt="profle pic of a dog" id="userprofilepic"></div>
+    <div class="col">
+        <h3>{{full_name}}</h3>
+        <h4>{{username}}</h4>
+        <h4>{{gender}}</h4>
+        
+    </div>
+    <div class="col">
+
+        <a class='btn btn-primary' href="{{ url_for('admin_bp.sendMessage', receiver_id=id, sending=0, name=full_name, username=member[1]) }}">Send a message</a>
+        
+        <br/>
+        <br/>
+
+        <a class='btn btn-primary' href="{{ url_for('admin_bp.updateMemberProfile', memberID=id, uname=member[1]) }}">Edit Profile</a>
+        
+    </div>
+
+    <h2>Member</h2>
+
+    {% if isActive %}
+    <h2> Subscription Status: Active</h2>
+    {% else %}
+    <h2> Subscription Status: Inactive</h2>
+    {% endif %}
+    
+    <h2>Basic Details</h2>
+    <table class="table">
+        
+        <tr>
+            <td>E-mail</td>
+            <td>{{email}}</td>
+        </tr>
+        <tr>    
+            <td>Date of Birth</td>
+            <td>{{dob|nz_date}}</td>
+
+        </tr>    
+        <tr>    
+            <td>Address</td>
+            <td>{{address}}</td>
+
+        </tr>  
+        <tr>    
+            <td>Phone</td>
+            <td>{{phone}}</td>
+
+        </tr>  
+
+    </table>
+
+    <h2 >Introduction</h2>
+
+    <div>   {{introduction}}</div>
+
+    
+    <h2>Fitness Information</h2>
+
+    <table class="table">
+        
+        <tr>
+            <td>Height</td>
+            <td>{{height}}cm</td>
+        </tr>
+        <tr>    
+            <td>Weight</td>
+            <td>{{weight}}kg</td>
+
+        </tr>    
+        <tr>    
+            <td>BMI</td>
+            <td>{{ bmi }}</td>
+
+        </tr>  
+        <tr>    
+            <td>Health History</td>
+            <td>{{health_record}}</td>
+
+        </tr>  
+    </table>
+
+    <h2>Emergency Information</h2>
+
+    <table class="table">
+        
+        <tr>
+            <td>Contact Person</td>
+            <td>{{emergent_person}}</td>
+        </tr>
+        <tr>    
+            <td>Phone Number</td>
+            <td>{{emergent_person_phone}}</td>
+
+        </tr>    
+    </table>
+
+    <table class="table">
+        
+        <tr>
+            <td>Date Registered</td>
+            <td>{{registered_date}}</td>
+        </tr>
+    </table>
+
+</div>
+{% else %}
+<div>Profile placeholder</div>
+{% endif %}
+
+{% endblock %}

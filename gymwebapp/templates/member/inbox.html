@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+
+
+<div class='profile-heading'>
+
+
+    {% if msg %}
+        {% set msg_id = msg[0] %}
+        {% set sender_id = msg[1] %}
+        {% set receiver_id = msg[2] %}
+        {% set title = msg[3] %}
+        {% set message = msg[4] %}
+        {% set type = msg[5] %}
+        {% set isRead = msg[6] %}
+        {% set date_time = msg[7] %}
+
+
+    <a class='btn btn-primary' href="{{ url_for('member_bp.viewInbox') }}">Return to Inbox</a>
+
+
+
+    
+    <h1> {{ title }}</h1>
+    <h3> Sent on {{ date_time | format_date_time() }}</h3>
+    
+    <div>
+        {{message}}
+
+    </div>
+    <br>
+{% if not isRead %}
+<div>
+    <a class='btn btn-primary' style="background-color: orange;color: black;" href="{{ url_for('member_bp.archiveMessage', msg_id=msg_id, redir='inbox', isRead=0) }}">Mark as read</a>
+</div>
+{% else %}
+
+<div>
+    <div>
+        <a class='btn btn-primary' style="background-color: grey;color: whitesmoke;" href="{{ url_for('member_bp.archiveMessage', msg_id=msg_id, redir='inbox', isRead=1) }}">Mark as unread</a>
+    </div>
+</div>
+
+
+{% endif %}
+
+    {% else %}
+
+    
+
+
+
+
+    <h1> My inbox </h1>
+
+
+    <div role="grid" class="table">
+
+
+        <div role="row">
+
+            <div role="gridcell" class="row cell">
+                <div class="col-sm">  </div>
+                <div class="col-sm"> Title </div>
+                <div class="col-sm"> Sent on </div>
+            </div>
+
+    </div>
+
+
+        {% for msg in msgs %}
+
+
+            {% set msg_id = msg[0] %}
+            {% set title = msg[1] %}
+            {% set message = msg[2] %}
+            {% set isRead = msg[3] %}
+            {% set date = msg[4] %}
+            {% set type = msg[5] %}
+
+
+            <a role="row" class="row" href="{{ url_for('member_bp.viewInbox', msg_id=msg_id)}}">
+
+                <div role="gridcell" class="row cell">
+                    <div class="col-sm mail">
+
+                        {%if isRead %}
+                        
+                        <img class="img-responsive " src="{{url_for('static', filename='/icons/read.png')}}"  alt="read_icon" id="read_icon">
+
+                        {% else %}
+
+                        <img class="img-responsive " src="{{url_for('static', filename='/icons/unread.png')}}" alt="unread_icon" id="unread_icon">
+                        
+                        {% endif %}
+                    
+                    </div>
+                    <div class="col-sm">{{title}}</div>
+                    <div class="col-sm">{{date | format_date_time()}}</div>
+                </div>
+
+            </a>
+
+
+
+
+
+        {% endfor %}
+
+        
+
+
+
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

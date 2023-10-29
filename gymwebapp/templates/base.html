@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" naem="viewport" content="width=device-width"/>
+        <title>{% block title %} Lincoln Fitness -- JOIN Today!{% endblock %}</title>
+        <!-- CSS only -->
+        <link rel="stylesheet" tpye="text/css" href= "{{ url_for('static', filename='stylesheets/style.css') }}" >
+        <link rel="stylesheet" tpye="text/css" href= "{{ url_for('static', filename='stylesheets/layout.css') }}" >
+        <link rel="stylesheet" tpye="text/css" href= "{{ url_for('static', filename='stylesheets/my-profile-layout.css') }}" >
+        
+        <link href="{{ url_for('static', filename='stylesheets/bootstrap.min.css') }}" rel='stylesheet' />
+        
+        <link href="{{ url_for('static', filename='scripts/fullcalendar_v5/library/main.css') }}" rel='stylesheet' />
+        <script src="{{ url_for('static', filename='scripts/fullcalendar_v5/library/main.js') }}"></script>
+        
+        <script src="{{ url_for('static', filename='scripts/moment-with-locales.js') }}"></script>
+        
+        <script src="{{ url_for('static', filename='scripts/moment.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/index.global.min.js') }}"></script>
+
+
+    </head>
+
+    
+
+
+
+    <body>
+
+        <!-- have a button POST a click via AJAX -->
+          <!-- Page Title -->
+          <div>
+            <h1 class="mainheader" style="margin:0 0">Lincoln Fitness</h1>
+              {% if session['username'] %}
+          </div>
+          <div>
+            <h2 class = "userheader" style="margin: 0 0">Welcome back, {{session['username']}} </h2>
+            
+              {% endif  %}
+          </div>
+            {% include 'nav.html' %}
+          
+          
+        
+
+              <section class="content" style="padding:50px">
+                
+
+                    {% for message in get_flashed_messages() %}
+                  <div class="flash">{{ message }}
+                  </div>
+                    {% endfor %}
+
+                      {% block content %}
+                      {% if not session["username"] %}
+                      <h2 class = "userheader" style="margin: 0 0">Please select one of the options above to interact! :> </h2>
+                      {% endif %}
+
+
+                      {% if session['role'] == 'member'%}
+                      <div class="container text-center">
+                        <div class="row row-cols-2">
+                          <div class="col">
+                            
+
+                            <h2> Your upcoming group fitness sessions</h2>
+
+                            <table class=" table table-hover table-striped center">
+                              <thead>
+                                  <tr>
+                                      <th scope="col">Title</th>
+                                      <th scope="col">Trainer</th>
+                                      <th scope="col">Category</th>
+                                      <th scope="col">Date</th>
+                                      <th scope="col">Time</th>
+                                      <th scope="col">Location</th>
+                                  </tr>
+                          
+                          
+                              </thead>
+                              <tbody>
+                                  
+                          
+                              {% for group in groups %}
+                              
+                          
+                              
+                                  
+                                  <tr>
+                          
+                                      {% set trainer_id = group[0] %}
+                                      {% set title = group[1] %}
+                                      {% set name = group[2] %}
+                                      {% set category = group[3] %}
+                                      {% set date = group[4] %}
+                                      {% set time = group[5] %}
+                                      {% set loc = group[6] %}
+                                      {% set session_id = group[7] %}
+                                      
+
+                                      <td scope="row"><a href="{{ url_for('all_users_bp.showaclass', class_id=session_id) }}"> {{title}} </a></td>
+                                      <td scope="row"><a href="{{ url_for('member_bp.viewTrainers', trainer_id=trainer_id) }}"> {{name}} </a></td>
+                                      <td scope="row">{{category}}</td>
+                                      <td scope="row">{{date | nz_date()}}</td>
+                                      <td scope="row">{{time | time()}}</td>
+                                      <td scope="row">{{loc}}</td>
+
+                                      
+                                      
+                          
+                                      
+                          
+                                     
+                                  </tr>
+                              
+                              {% endfor %}
+                          
+                              </tbody>
+                          </table>
+                          
+                            
+
+
+
+
+
+
+                          </div>
+                          <div class="col">
+                            
+
+
+
+
+                            <h2> Your upcoming personal training sessions</h2>
+
+                            <table class=" table table-hover table-striped center">
+                              <thead>
+                                  <tr>
+                     
+                                      <th scope="col">Trainer</th>
+                  
+                                      <th scope="col">Date</th>
+                                      <th scope="col">Time</th>
+                                      <th scope="col">Location</th>
+                                  </tr>
+                          
+                          
+                              </thead>
+                              <tbody>
+                                  
+                          
+                              {% for pt in pts %}
+                              
+                          
+                              
+                                  
+                                  <tr>
+                          
+                                      {% set trainer_id = pt[0] %}
+                                      {% set name = pt[1] %}
+        
+                                      {% set date = pt[2] %}
+                                      {% set time = pt[3] %}
+                                      {% set loc = pt[4] %} 
+                                      {% set msg = pt[5] %}                                     
+                                      
+
+                               
+                                      <td scope="row"><a href="{{ url_for('member_bp.viewTrainers', trainer_id=trainer_id) }}"> {{name}} </a></td>
+                          
+                                      <td scope="row">{{date | nz_date()}}</td>
+                                      <td scope="row">{{time | time()}}</td>
+                                      <td scope="row">{{loc}}</td>
+
+                                      
+                                      
+                          
+                                      
+                          
+                                     
+                                  </tr>
+                              
+                              {% endfor %}
+                          
+                              </tbody>
+                          </table>
+
+
+
+
+                          </div>
+                          <div class="col">
+
+
+                            <h2> Your subscription expires on:</h2>
+                            <h2> {{sub[1] | format_date_time()}} </h2>
+
+
+
+
+
+                          </div>
+                          <div class="col">
+
+                            <h2> Your new Messages</h2>
+
+                            <table class=" table table-hover table-striped center">
+                              <thead>
+                                  <tr>
+                     
+                                      <th scope="col">Title</th>
+                  
+                                      <th scope="col">Message</th>
+                                      <th scope="col"> Sent on </th>
+                                      
+
+                                  </tr>
+                          
+                          
+                              </thead>
+                              <tbody>
+                                  
+                          
+                              {% for msg in msgs %}
+
+
+                                  {% set id = msg[0] %}
+
+                                  {% set title = msg[1] %}
+                                  {% set message = msg[2] %}
+        
+                                  {% set read = msg[3] %}
+                                  {% set sent = msg[4] %} 
+                                  {% if not read %}
+
+                                  <tr>
+                          
+                                                                
+                                    
+                                      <td scope="row">{{title}}</td>
+                                      <td scope="row">{{message|truncate(15)}}</td>
+                                      <td scope="row">{{sent | format_date_time()}}</td>
+                                      <th scope="col"> <a class='btn btn-primary' href="{{ url_for('member_bp.viewInbox', msg_id=id) }}">Open</a> </th>
+
+                                      
+                                      
+                          
+                                      
+                          
+                                     
+                                  </tr>
+                                  {% endif %}
+                              
+                              {% endfor %}
+                          
+                              </tbody>
+                          </table>
+
+
+
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %}
+<!-- End of MEMBER  -->
+
+<!-- Start of trainer -->
+
+
+
+
+                      
+
+
+
+
+                    <!--<div class="center mx-auto">
+                      <img src={{ url_for('static', filename='images/sample.jpg') }} title="sample" alt="sample"/>
+                    </div> -->
+                      {% endblock %}
+
+
+                  
+              </section>
+
+          </div>
+
+    </body>
+</div>
+<div class ='background-image'>
+  <img src="{{ url_for('static', filename='images/gymphoto.jpg') }}" class ="img-fluid" />
+</div>
+
+
+<div class="footer">Developed by Group 1 COMP639 in 2023</div>
+
+
+
+
+    
+</html>

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if not reports %}
+
+
+<div class = "ptFormContainer"> 
+  <h3 class="formheading">{{"Generate a financial report"}}</h3>
+  <form action="/report" method="POST"> 
+       
+          <!--<div class = "col-sm-6" align = "center">  -->
+            
+            From 
+            <input type = "date" name = "fromDate" id="fromDate" value="" required>  
+          
+          
+            <!--<div class = "col-sm-6" align = "center">  -->
+            To  
+              <input type = "date" name = "toDate" id="toDate" value="" required>  
+          
+            
+            
+            <!--<div class = "col-sm-6" align = "center">  -->
+              <input type="submit" id="ptSubmitButton" value="Generate Report">
+              <input type="reset" value="Reset selection" id="ptResetButton">
+              <br>
+              {% if errorresult %}
+              <span style="color: red;"> Cannot generate report, the end date cannot be earlier than the start date</span>  
+              {%endif%}  
+            
+
+            
+
+
+        
+      
+    </div>  
+
+
+
+  </form>
+
+<div>
+{% else %}
+
+<div class = "ptFormContainer"> 
+  <h3 class="formheading">Financial Report from {{ fromDate | nz_date() }} to {{ toDate | nz_date() }}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Subscription Income</th>
+            <th>Personal Training Income</th>
+            <th>Total Income</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+
+              {% for item in reports[0] %}
+              {%if item%}
+              
+              <td>${{ item }}</td>
+
+
+              {% else %}
+
+              <td>${{ 0 }}</td>
+ 
+
+
+              {%endif%}
+              {% endfor %}
+            </tr>
+        </tbody>
+      </table>
+<div>
+
+{% endif %}
+
+
+
+
+
+
+
+{% endblock %}

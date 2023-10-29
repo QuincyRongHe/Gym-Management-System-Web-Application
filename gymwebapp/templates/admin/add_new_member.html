@@ -1,0 +1,224 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="profile-headings center">
+
+{% macro radio(field) %}
+    {% for subfield in field %}
+
+            <td>{{ subfield }}  {{ subfield.label }}</td>
+
+
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro with_errors(field) %}
+
+    {% if field.errors %}
+        {% set css_class = 'has_error ' + kwargs.pop('class', '') %}
+        {% if field.type == "RadioField" %}
+            {{ radio(field) }}
+        {% else %}
+            {{ field(class="form-control me-2 css_class", **kwargs) }}
+        {% endif %}
+        
+        <td><ul class="errors" >{% for error in field.errors %}<li class="center" style="color:  red;">{{ error|e }}</li>{% endfor %}</ul>
+        </td>
+    {% else %}
+        {% if field.type == "RadioField" %}
+            {{ radio(field) }}
+        {% else %}
+        {{ field(class="form-control me-2 css_class", **kwargs) }}
+        {% endif %}
+    {% endif %}
+
+{% endmacro %}
+
+{% macro form_field(field) %}
+
+    {% if field.flags.required %}<td>{{ field.label(text='*' + field.label.text) }}
+    {% else %}<td>{{ field.label }}{% endif %}:</td>{{ with_errors(field, style='font-weight: bold') }}
+{% endmacro %}
+
+{% macro label(field) %}
+
+    {% if field.flags.required %}{{ field.label(text='*' + field.label.text) }}
+    {% else %}{{ field.label }}{% endif %}
+{% endmacro %}
+
+
+
+    <form id="create_form" action="{{ url_for('admin_bp.addNewMember') }}" method="POST"> 
+        {{ form.hidden_tag() }}
+
+
+        <div class="container text-center">
+            <div class="row">
+              <div class="col">
+
+              </div>
+              <div class="col">
+                {{ with_errors(form.submit, style='color: black;background-color: #ffb703;') }}
+              </div>
+              <div class="col">
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+    <div class="container text-center">
+        <div class="row">
+          <div class="col">
+
+
+
+
+
+            <div class="col">
+                <br/>
+                
+            </div>
+    
+            <h2>Login Details</h2>
+            <table class="table">
+                <tr>
+                    <td>{{label(form.username)}}</td>
+                    <td>{{ with_errors(form.username, style='font-weight: bold') }}</td>
+                </tr>
+    
+            </table>
+    
+            <h3>{{label(form.sub)}} : </h3>
+            <h3>{{ with_errors(form.sub, style='font-weight: bold') }}</h3>
+            <h3>{{label(form.gender)}} : {{ with_errors(form.gender, style='font-weight: bold') }}</h3>
+          </div>
+
+
+
+          <div class="col">
+            
+            
+            <h2>Basic Details</h2>
+        <table class="table">
+
+
+            <tr>
+                <td>{{label(form.first_name)}}</td>
+                <td>{{ with_errors(form.first_name, style='font-weight: bold') }}</td>
+            </tr>
+            <tr>
+                <td>{{label(form.last_name)}}</td>
+                <td>{{ with_errors(form.last_name, style='font-weight: bold') }}</td>
+            </tr>
+
+            <tr>
+                <td>{{label(form.email)}}</td>
+                <td>{{ with_errors(form.email, style='font-weight: bold') }}</td>
+            </tr>
+            <tr>    
+                <td>{{label(form.dob)}}</td>
+                <td>{{ with_errors(form.dob, style='font-weight: bold') }}</td>
+    
+            </tr>    
+            <tr>    
+                <td>{{label(form.housename)}}</td>
+                <td>{{ with_errors(form.housename, style='font-weight: bold') }}</td>
+    
+            </tr>  
+            <tr>    
+                <td>{{label(form.street)}}</td>
+                <td>{{ with_errors(form.street, style='font-weight: bold') }}</td>
+    
+            </tr> 
+            <tr>    
+                <td>{{label(form.town)}}</td>
+                <td>{{ with_errors(form.town, style='font-weight: bold') }}</td>
+    
+            </tr> 
+            <tr>    
+                <td>{{label(form.city)}}</td>
+                <td>{{ with_errors(form.city, style='font-weight: bold') }}</td>
+    
+            </tr> 
+            <tr>    
+                <td>{{label(form.postcode)}}</td>
+                <td>{{ with_errors(form.postcode, style='font-weight: bold') }}</td>
+    
+            </tr> 
+            <tr>    
+                <td>{{label(form.phone)}}</td>
+                <td>{{ with_errors(form.phone, style='font-weight: bold') }}</td>
+    
+            </tr>  
+    
+        </table>
+
+
+
+
+          </div>
+          <div class="col">
+            
+
+
+
+
+            <h2 >{{label(form.introduction)}}</h2>
+    
+          <p align="right">{{ with_errors(form.introduction, style="font-weight: bold;") }}</p> 
+    
+        
+        <h2>Fitness Information</h2>
+    
+        <table class="table">
+            
+            <tr>
+                <td>{{label(form.height)}}</td>
+                <td>{{ with_errors(form.height, style='font-weight: bold') }}</td>
+            </tr>
+            <tr>    
+                <td>{{label(form.weight)}}</td>
+                <td>{{ with_errors(form.weight, style='font-weight: bold') }}</td>
+    
+            </tr>    
+            <tr>    
+                <td>{{label(form.health)}}</td>
+                <td>{{ with_errors(form.health, style='font-weight: bold') }} </textarea></td>
+    
+            </tr>  
+        </table>
+    
+        <h2>Emergency Information</h2>
+    
+        <table class="table">
+            
+            <tr>
+                <td>{{label(form.emergentname)}}</td>
+                <td>{{ with_errors(form.emergentname, style='font-weight: bold') }}</td>
+            </tr>
+            <tr>    
+                <td>{{label(form.emergentnum)}}</td>
+                <td>{{ with_errors(form.emergentnum, style='font-weight: bold') }}</td>
+    
+            </tr>    
+        </table>
+    
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+{% endblock %}
